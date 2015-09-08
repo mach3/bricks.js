@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Bricks.js Demo</title>
+	<style>
+
+	body {
+		width: 752px;
+		margin: 0 auto;
+	}
+
+	#container {
+		position: relative;
+	}
+
+	#container section {
+		box-sizing: border-box;
+		padding: 1em;
+		background-color: #ddd;
+	}
+	.dummy-image {
+		display: inline-block;
+		width: 100%;
+		height: 100px;
+		background-color: #000;
+	}
+
+	nav ul {
+		list-style-type: none;
+		padding: 0;
+		margin: 1em 0;
+	}
+
+	nav ul li {
+		display: inline;
+	}
+
+	</style>
+</head>
+<body>
+
+	<header>
+		<h1>Bricks.js Demo</h1>
+		<nav>
+			<ul>
+				<li><button id="button-clean">Clean</button></li>
+				<li><button id="button-refresh">Clean and Refresh</button></li>
+			</ul>
+		</nav>
+	</header>
+
+	<article id="container">
+	</article>
+
+	<script type="text/template" id="template-section">
+	<section>
+		<span class="dummy-image"></span>
+		<h1>Item Name</h1>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+		</p>
+	</section>
+	</script>
+
+	<script src="../bower_components/jquery/dist/jquery.js"></script>
+	<script src="../src/bricks.js"></script>
+	<script>
+
+	!function(){
+		var br = $("#container").bricks({
+			width: 240,
+			gutter: 16
+		});
+
+		var refresh = function(){
+			var i, delay, process;
+
+			i = 12;
+			delay = 0;
+
+			process = function(){
+				var section, p;
+
+				p = parseInt(Math.random() * 3, 10);
+				section = $("<div>").append($("#template-section").html()).children();
+				section.css({
+					opacity: 0
+				});
+
+				while(p--){
+					section.find("p").eq(0).clone().appendTo(section);
+				}
+
+				delay += 300;
+				setTimeout(function(){
+					br.add(section.animate({opacity: 1}));
+				}, delay)
+
+			};
+
+			while(i--){
+				process();
+			}
+		};
+
+		$("#button-clean").on("click", function(){
+			br.clean();
+		});
+
+		$("#button-refresh").on("click", function(){
+			br.clean();
+			refresh();
+		});
+
+		refresh();
+	}();
+
+	</script>
+
+</body>
+</html>
